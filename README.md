@@ -1,4 +1,3 @@
-# hello-world
-Great things start-off small. Learn, code, develop... all that you wanna try here.
+# Vidify
 
-First edit for first commit
+Simple NodeJS + Express App to mock a backend service of a video streaming application.

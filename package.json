@@ -1,0 +1,23 @@
+{
+  "name": "vidify",
+  "version": "1.0.0",
+  "description": "Simple NodeJS + Express App to mock a backend service of a video streaming application.",
+  "homepage": "https://github.com/sanketshah2013/Vidify#readme",
+  "bugs": {
+    "url": "https://github.com/sanketshah2013/Vidify/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sanketshah2013/Vidify.git"
+  },
+  "license": "ISC",
+  "author": "Sanket Shah",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
