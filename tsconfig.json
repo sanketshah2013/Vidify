@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    /* Target and Environment */
+    "target": "ES2022", // Compile to modern JavaScript
+    "module": "NodeNext", // Supports modern ES Modules & CommonJS
+    "moduleResolution": "NodeNext", // Let TS follow Node.js file resolution rules
+
+    /* Directories */
+    "rootDir": "./src", // Source files live inside the src folder
+    "outDir": "./dist", // Compiled production JavaScript outputs here
+
+    /* Strict Type-Checking */
+    "strict": true, // Enable strong typing and fewer hidden bugs
+    "noImplicitAny": true, // Error out on expressions inferred as 'any' type
+    "strictNullChecks": true, // Guard against null/undefined pointer crashes
+
+    /* Interoperability & Optimization */
+    "esModuleInterop": true, // Easily import CommonJS packages like Express
+    "skipLibCheck": true, // Skip type-checking node_modules to speed up builds
+    "forceConsistentCasingInFileNames": true, // Prevent cross-operating system import errors
+    "resolveJsonModule": true, // Allow importing .json config files directly
+    "sourceMap": true // Produce debug files for easy line-matching errors
+  },
+  "include": ["src/**/*"], // Tell TS to compile everything inside src/
+  "exclude": ["node_modules", "dist"] // Tell TS to ignore these directories during compilation
+}
