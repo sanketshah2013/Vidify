@@ -1,18 +1,15 @@
 import express from "express";
 import mongoose from "mongoose";
-import router from "./routes/genres.js";
+import genreRouter from "./routes/genreRoutes.js";
+import customerRouter from "./routes/customerRoutes.js";
 import { createInitialData } from "./util/index.js";
 
-// setup and start server
+// setup server
 const app = express();
 app.use(express.json());
 app.get("/", (req, res) => res.send("Hello World"));
-app.use("/api/genres", router);
-
-const port = process.env.PORT || 3000;
-app.listen(port, () =>
-  console.log(`Server is running on http://localhost:${port}`),
-);
+app.use("/api/genres", genreRouter);
+app.use("/api/customers", customerRouter);
 
 // connect MongDB
 mongoose
@@ -21,3 +18,9 @@ mongoose
   .catch((err) => console.log("Error connecting to MongoDB...", err));
 
 createInitialData();
+
+// start server
+const port = process.env.PORT || 3000;
+app.listen(port, () =>
+  console.log(`Server is running on http://localhost:${port}`),
+);
