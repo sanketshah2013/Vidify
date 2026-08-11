@@ -39,7 +39,6 @@ router.post("/", async (req, res) => {
         .status(status.badRequest)
         .send("Movie for given ID not found!");
 
-    console.log(movie);
     if (!movie.numberInStock)
       return res.status(status.badRequest).send("Movie not in Stock!");
 
@@ -106,8 +105,12 @@ const validateRental = (
   rentalObj: Record<string, string>,
 ): Joi.ValidationResult => {
   const schema = Joi.object({
-    customerId: Joi.string(),
-    movieId: Joi.string(),
+    customerId: Joi.string()
+      .regex(/^[0-9a-fA-F]{24}$/)
+      .messages({ "*": "CustomerId should be a valid MongoDB ObjectId" }),
+    movieId: Joi.string()
+      .regex(/^[0-9a-fA-F]{24}$/)
+      .messages({ "*": "CustomerId should be a valid MongoDB ObjectId" }),
     dateReturned: Joi.date().max("now"),
     rentalFee: Joi.number().precision(2).min(0),
   });

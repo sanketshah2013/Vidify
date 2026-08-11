@@ -96,7 +96,10 @@ const validateMovie = (movieObj: Movie): Joi.ValidationResult => {
       .messages({
         "*": "Title should be max 50 characters. Alphanumeric and spaces allowed!",
       }),
-    genreId: Joi.string().required(),
+    genreId: Joi.string()
+      .required()
+      .regex(/^[0-9a-fA-F]{24}$/)
+      .messages({ "*": "GenreId should be a valid MongoDB ObjectId" }),
     numberInStock: Joi.string()
       .pattern(/^\d{1,10}$/)
       .required()
