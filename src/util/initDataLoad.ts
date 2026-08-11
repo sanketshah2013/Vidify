@@ -1,12 +1,15 @@
 import { Response } from "express";
-import { customerNames, genreNames } from "./constants.js";
-import { CustomerModel, GenreModel } from "./schemaModels.js";
+import { customerNames, genreNames, movies } from "./constants.js";
+import { CustomerModel, GenreModel, MovieModel } from "./schemaModels.js";
+import { Document } from "mongoose";
 
-const getGenreCount = async (): Promise<number | undefined> => {
+const getAllGenres = async (): Promise<
+  Document<any, any, Genre>[] | undefined
+> => {
   try {
-    const count = await GenreModel.estimatedDocumentCount();
-    console.log("Existing Genres in DB:", count);
-    return count;
+    const genres = (await GenreModel.find()) as Document<any, any, Genre>[];
+    console.log("Existing Genres in DB:", genres.length);
+    return genres;
   } catch (error) {
     console.error(error);
   }
@@ -14,8 +17,8 @@ const getGenreCount = async (): Promise<number | undefined> => {
 
 const createGenres = async (force: boolean) => {
   if (!force) {
-    const genreCount = await getGenreCount();
-    if (genreCount) return;
+    const genreCount = await getAllGenres();
+    if (genreCount?.length) return;
   }
 
   const genreData: Genre[] = genreNames.map((name) => ({
@@ -64,9 +67,43 @@ const createCustomers = async (force: boolean) => {
     .catch((err) => console.error(err));
 };
 
+const getMovieCount = async (): Promise<number | undefined> => {
+  try {
+    const count = await MovieModel.estimatedDocumentCount();
+    console.log("Existing Movies in DB:", count);
+    return count;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const createMovies = async (force: boolean) => {
+  if (!force) {
+    const movieCount = await getMovieCount();
+    if (movieCount) return;
+  }
+
+  const genres = (await getAllGenres()) as any;
+  const movieData: Movie[] = movies.map(({ title, genre }) => ({
+    title,
+    genre: genres
+      ?.filter((dbGenre) => genre === dbGenre.name)
+      .map(({ _id, name }) => ({ _id, name }))[0],
+    numberInStock: Math.floor(Math.random() * 100),
+    dailyRentalRate: Math.floor(Math.random() * 100),
+  }));
+
+  MovieModel.insertMany(movieData)
+    .then((resp) =>
+      console.log("Initial Movie Data load Success! Total Data:", resp.length),
+    )
+    .catch((err) => console.error(err));
+};
+
 export const createInitialData = (force: boolean = false) => {
   createGenres(force);
   createCustomers(force);
+  createMovies(force);
 };
 
 export const handleDBErrors = (res: Response, err: unknown) => {

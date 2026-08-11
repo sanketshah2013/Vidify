@@ -10,3 +10,11 @@ interface Customer {
   isGold: boolean;
   phone: number;
 }
+
+interface Movie {
+  title: string;
+  genre?: Genre;
+  genreId?: string;
+  numberInStock: number;
+  dailyRentalRate: number;
+}

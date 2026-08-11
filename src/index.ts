@@ -1,8 +1,10 @@
 import express from "express";
 import mongoose from "mongoose";
-import genreRouter from "./routes/genreRoutes.js";
 import customerRouter from "./routes/customerRoutes.js";
-import { createInitialData } from "./util/index.js";
+import genreRouter from "./routes/genreRoutes.js";
+import movieRouter from "./routes/movieRoutes.js";
+import rentalRouter from "./routes/rentalRoutes.js";
+import { createInitialData } from "./util/initDataLoad.js";
 
 // setup server
 const app = express();
@@ -10,6 +12,8 @@ app.use(express.json());
 app.get("/", (req, res) => res.send("Hello World"));
 app.use("/api/genres", genreRouter);
 app.use("/api/customers", customerRouter);
+app.use("/api/movies", movieRouter);
+app.use("/api/rentals", rentalRouter);
 
 // connect MongDB
 mongoose

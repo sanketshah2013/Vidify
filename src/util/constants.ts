@@ -1,3 +1,10 @@
+export const status = {
+  badRequest: 400,
+  unauthorised: 401,
+  notFound: 404,
+  serverErr: 500,
+};
+
 export const genreNames = [
   "Suspense",
   "Action",
@@ -52,4 +59,32 @@ export const customerNames = [
   "May Day",
   "Jenny Flex",
   "Penelope Smallbone",
+];
+
+export const movies = [
+  { title: "The Shawshank Redemption", genre: "Drama" },
+  { title: "The Godfather", genre: "Crime" },
+  { title: "The Dark Knight", genre: "Action" },
+  { title: "Pulp Fiction", genre: "Crime" },
+  { title: "Forrest Gump", genre: "Drama" },
+  { title: "Inception", genre: "Action" },
+  { title: "Fight Club", genre: "Drama" },
+  { title: "Interstellar", genre: "Adventure" },
+  { title: "The Matrix", genre: "Action" },
+  { title: "Goodfellas", genre: "Biography" },
+  { title: "The Silence of the Lambs", genre: "Crime" },
+  { title: "Se7en", genre: "Crime" },
+  { title: "The Lord of the Rings", genre: "Adventure" },
+  { title: "Star Wars", genre: "Action" },
+  { title: "Parasite", genre: "Drama" },
+  { title: "Spirited Away", genre: "Animation" },
+  { title: "Gladiator", genre: "Action" },
+  { title: "The Lion King", genre: "Animation" },
+  { title: "The Prestige", genre: "Drama" },
+  { title: "Back to the Future", genre: "Adventure" },
+  { title: "Whiplash", genre: "Drama" },
+  { title: "Alien", genre: "Horror" },
+  { title: "The Departed", genre: "Crime" },
+  { title: "The Green Mile", genre: "Crime" },
+  { title: "Glengarry Glen Ross", genre: "Drama" },
 ];

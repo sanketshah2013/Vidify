@@ -1,7 +1,7 @@
-import Router from "express";
+import Router, { Request } from "express";
 import Joi from "joi";
 import { CustomerModel } from "../util/schemaModels.js";
-import { handleDBErrors } from "../util/index.js";
+import { handleDBErrors } from "../util/initDataLoad.js";
 
 const router = Router();
 
@@ -16,9 +16,9 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", async (req: Request<{}, any, Customer>, res) => {
   const { error } = validateCustomer(req.body);
-  if (error) return res.status(400).send(error?.details[0].message);
+  if (error) return res.status(400).send(error.details[0].message);
 
   const { username, name, isGold, phone } = req.body;
   try {
@@ -47,22 +47,17 @@ router.get("/:username", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", async (req: Request<{ id: string }, any, Customer>, res) => {
   // Validate the input
   const { error } = validateCustomer(req.body);
-  if (error) return res.status(400).send(error?.details[0].message);
+  if (error) return res.status(400).send(error.details[0].message);
 
   // Lookup and update the customer
   try {
     const { username, name, isGold, phone } = req.body;
     const customer = await CustomerModel.findOneAndUpdate(
       { username: req.params.id },
-      {
-        username,
-        name,
-        isGold,
-        phone,
-      },
+      { username, name, isGold, phone },
       { returnDocument: "after" },
     );
     if (!customer)
