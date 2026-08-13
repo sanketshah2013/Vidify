@@ -106,10 +106,10 @@ const validateRental = (
 ): Joi.ValidationResult => {
   const schema = Joi.object({
     customerId: Joi.string()
-      .regex(/^[0-9a-fA-F]{24}$/)
+      .pattern(/^[0-9a-fA-F]{24}$/)
       .messages({ "*": "CustomerId should be a valid MongoDB ObjectId" }),
     movieId: Joi.string()
-      .regex(/^[0-9a-fA-F]{24}$/)
+      .pattern(/^[0-9a-fA-F]{24}$/)
       .messages({ "*": "CustomerId should be a valid MongoDB ObjectId" }),
     dateReturned: Joi.date().max("now"),
     rentalFee: Joi.number().precision(2).min(0),

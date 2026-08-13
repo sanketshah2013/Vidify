@@ -15,15 +15,20 @@
   "type": "module",
   "main": "index.ts",
   "scripts": {
-    "start": "tsx watch src/index.ts",
+    "start": "set vidify_jwtPrivateKey=jwtPrivateKey && tsx watch src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
+    "bcrypt": "^6.0.0",
+    "config": "^5.0.0",
     "express": "^5.2.1",
     "joi": "^18.2.3",
+    "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.9.1"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",
     "@types/node": "^26.1.2",
     "tsx": "^4.23.2",

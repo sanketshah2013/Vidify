@@ -1,3 +1,5 @@
+import config from "config";
+import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 
 const GenreSchema = new mongoose.Schema({
@@ -18,10 +20,10 @@ const GenreSchema = new mongoose.Schema({
   slug: { type: String, trim: true },
 });
 
-export const GenreModel = mongoose.model("Genre", GenreSchema);
+export const GenreModel = mongoose.model("genres", GenreSchema);
 
 export const CustomerModel = mongoose.model(
-  "Customer",
+  "customers",
   new mongoose.Schema({
     username: {
       type: String,
@@ -58,7 +60,7 @@ export const CustomerModel = mongoose.model(
 );
 
 export const MovieModel = mongoose.model(
-  "Movie",
+  "movies",
   new mongoose.Schema({
     title: {
       type: String,
@@ -85,7 +87,7 @@ export const MovieModel = mongoose.model(
 );
 
 export const RentalModel = mongoose.model(
-  "Rental",
+  "rentals",
   new mongoose.Schema({
     customer: {
       type: new mongoose.Schema({
@@ -144,3 +146,38 @@ export const RentalModel = mongoose.model(
     rentalFee: { type: Number, min: 0 },
   }),
 );
+
+const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    trim: true,
+    minLength: 3,
+    maxLength: 20,
+    required: true,
+  },
+  email: {
+    type: String,
+    trim: true,
+    unique: true,
+    match: [
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      "Please fill a valid email address",
+    ],
+    required: true,
+  },
+  password: {
+    type: String,
+    trim: true,
+    match: [
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      "Password requires atleast 1 lowercase, 1 uppercase, 1 digit, 1 special char [@$!%*?&]. Total length should be 8 or more characters!",
+    ],
+    required: true,
+  },
+});
+
+userSchema.methods.generateAuthToken = function () {
+  return jwt.sign({ _id: this._id }, config.get("jwtPrivateKey"));
+};
+
+export const UserModel = mongoose.model("users", userSchema);

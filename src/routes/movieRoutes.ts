@@ -98,7 +98,7 @@ const validateMovie = (movieObj: Movie): Joi.ValidationResult => {
       }),
     genreId: Joi.string()
       .required()
-      .regex(/^[0-9a-fA-F]{24}$/)
+      .pattern(/^[0-9a-fA-F]{24}$/)
       .messages({ "*": "GenreId should be a valid MongoDB ObjectId" }),
     numberInStock: Joi.string()
       .pattern(/^\d{1,10}$/)

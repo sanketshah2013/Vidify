@@ -18,3 +18,9 @@ interface Movie {
   numberInStock: number;
   dailyRentalRate: number;
 }
+
+interface User {
+  name: string;
+  email: string;
+  password: string;
+}
