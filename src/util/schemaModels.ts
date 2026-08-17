@@ -168,16 +168,18 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     trim: true,
-    match: [
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-      "Password requires atleast 1 lowercase, 1 uppercase, 1 digit, 1 special char [@$!%*?&]. Total length should be 8 or more characters!",
-    ],
+    maxLength: 100,
     required: true,
   },
+  isAdmin: Boolean,
 });
 
 userSchema.methods.generateAuthToken = function () {
-  return jwt.sign({ _id: this._id }, config.get("jwtPrivateKey"));
+  return jwt.sign(
+    { _id: this._id, isAdmin: this.isAdmin },
+    config.get("jwtPrivateKey") as string,
+    { expiresIn: "15m" },
+  );
 };
 
 export const UserModel = mongoose.model("users", userSchema);

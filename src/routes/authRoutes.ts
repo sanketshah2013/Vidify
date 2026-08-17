@@ -1,8 +1,6 @@
 import bcrypt from "bcrypt";
-import config from "config";
 import Router from "express";
 import Joi from "joi";
-import jwt from "jsonwebtoken";
 import { status } from "../util/constants.js";
 import { handleDBErrors } from "../util/initDataLoad.js";
 import { UserModel } from "../util/schemaModels.js";
@@ -24,7 +22,7 @@ router.post("/", async (req, res) => {
       return res.status(status.badRequest).send("Invalid email or password");
 
     // By default, TypeScript has no way of knowing what functions you are attaching to schema.methods (ignore err)
-    const token = user.generateAuthToken();
+    const token = (user as any).generateAuthToken();
 
     res.header("x-auth-token", token).send("Login Success!");
   } catch (err) {

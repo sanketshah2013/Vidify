@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import { status } from "../util/constants.js";
 import { handleDBErrors } from "../util/initDataLoad.js";
 import { UserModel } from "../util/schemaModels.js";
+import authorize from "../middlewares/authorize.js";
 
 const router = Router();
 
@@ -13,18 +14,31 @@ router.post("/", async (req, res) => {
     return res.status(status.badRequest).send(error.details[0].message);
 
   try {
-    const existingUser = UserModel.findOne({ email: req.body.email });
-    if (!existingUser)
+    const existingUser = await UserModel.findOne({ email: req.body.email });
+    if (existingUser)
       return res.status(status.badRequest).send("User already registered!");
 
-    const { name, email, password } = req.body;
+    const { name, email, password, isAdmin } = req.body;
     const hashed = await bcrypt.hash(password, 10);
-    const user = await new UserModel({ name, email, password: hashed }).save();
+    const user = await new UserModel({
+      name,
+      email,
+      password: hashed,
+      isAdmin,
+    }).save();
 
-    res.send(user);
+    res.send({ ...(user as any)._doc, password: undefined });
   } catch (err) {
     handleDBErrors(res, err);
   }
+});
+
+router.get("/me", authorize, async (req, res) => {
+  const user = await UserModel.findById((req as any).user._id).select(
+    "-password",
+  );
+
+  res.send(user);
 });
 
 const validateUser = (userObj: User): Joi.ValidationResult => {
@@ -39,6 +53,7 @@ const validateUser = (userObj: User): Joi.ValidationResult => {
       .messages({
         "*": "Password requires atleast 1 lowercase, 1 uppercase, 1 digit, 1 special char [@$!%*?&]. Total length should be 8 or more characters!",
       }),
+    isAdmin: Joi.boolean(),
   });
 
   return schema.validate(userObj);

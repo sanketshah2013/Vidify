@@ -1,7 +1,9 @@
-import Router, { Request } from "express";
+import Router, { Request, Response } from "express";
 import Joi from "joi";
 import { CustomerModel } from "../util/schemaModels.js";
 import { handleDBErrors } from "../util/initDataLoad.js";
+import authorize from "../middlewares/authorize.js";
+import admin from "../middlewares/admin.js";
 
 const router = Router();
 
@@ -16,7 +18,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req: Request<{}, any, Customer>, res) => {
+router.post("/", authorize, async (req: Request<{}, any, Customer>, res) => {
   const { error } = validateCustomer(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -47,43 +49,51 @@ router.get("/:username", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req: Request<{ id: string }, any, Customer>, res) => {
-  // Validate the input
-  const { error } = validateCustomer(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+router.put(
+  "/:id",
+  authorize,
+  async (req: Request<{ id: string }, any, Customer>, res) => {
+    // Validate the input
+    const { error } = validateCustomer(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
 
-  // Lookup and update the customer
-  try {
-    const { username, name, isGold, phone } = req.body;
-    const customer = await CustomerModel.findOneAndUpdate(
-      { username: req.params.id },
-      { username, name, isGold, phone },
-      { returnDocument: "after" },
-    );
-    if (!customer)
-      return res.status(404).send("Customer for given username not found!");
+    // Lookup and update the customer
+    try {
+      const { username, name, isGold, phone } = req.body;
+      const customer = await CustomerModel.findOneAndUpdate(
+        { username: req.params.id },
+        { username, name, isGold, phone },
+        { returnDocument: "after" },
+      );
+      if (!customer)
+        return res.status(404).send("Customer for given username not found!");
 
-    res.send(customer);
-  } catch (err) {
-    handleDBErrors(res, err);
-  }
-});
+      res.send(customer);
+    } catch (err) {
+      handleDBErrors(res, err);
+    }
+  },
+);
 
-router.delete("/:id", async (req, res) => {
-  // Lookup and remove the customer
-  try {
-    const customer = await CustomerModel.findOneAndDelete(
-      { username: req.params.id },
-      { returnDocument: "after" },
-    );
-    if (!customer)
-      return res.status(404).send("Customer for given username not found!");
+router.delete(
+  "/:id",
+  [authorize, admin],
+  async (req: Request, res: Response) => {
+    // Lookup and remove the customer
+    try {
+      const customer = await CustomerModel.findOneAndDelete(
+        { username: req.params.id },
+        { returnDocument: "after" },
+      );
+      if (!customer)
+        return res.status(404).send("Customer for given username not found!");
 
-    res.send(customer);
-  } catch (err) {
-    handleDBErrors(res, err);
-  }
-});
+      res.send(customer);
+    } catch (err) {
+      handleDBErrors(res, err);
+    }
+  },
+);
 
 const validateCustomer = (customerObj: Customer): Joi.ValidationResult => {
   const schema = Joi.object({

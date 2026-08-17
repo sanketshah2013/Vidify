@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Request, Response, Router } from "express";
 import Joi from "joi";
 import { handleDBErrors } from "../util/initDataLoad.js";
 import {
@@ -7,6 +7,8 @@ import {
   RentalModel,
 } from "../util/schemaModels.js";
 import { status } from "../util/constants.js";
+import authorize from "../middlewares/authorize.js";
+import admin from "../middlewares/admin.js";
 
 const router = Router();
 
@@ -19,7 +21,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", authorize, async (req, res) => {
   const { error } = validateRental(req.body);
   if (error)
     return res.status(status.badRequest).send(error.details[0].message);
@@ -61,7 +63,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", authorize, async (req, res) => {
   const { error } = validateRental(req.body);
   if (error)
     return res.status(status.badRequest).send(error.details[0].message);
@@ -86,20 +88,24 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
-  try {
-    const rental = await RentalModel.findByIdAndDelete(req.params.id, {
-      returnDocument: "after",
-    });
-    if (!rental)
-      return res
-        .status(status.badRequest)
-        .send("Rental for given ID not found!");
-    res.send(rental);
-  } catch (err) {
-    handleDBErrors(res, err);
-  }
-});
+router.delete(
+  "/:id",
+  [authorize, admin],
+  async (req: Request, res: Response) => {
+    try {
+      const rental = await RentalModel.findByIdAndDelete(req.params.id, {
+        returnDocument: "after",
+      });
+      if (!rental)
+        return res
+          .status(status.badRequest)
+          .send("Rental for given ID not found!");
+      res.send(rental);
+    } catch (err) {
+      handleDBErrors(res, err);
+    }
+  },
+);
 
 const validateRental = (
   rentalObj: Record<string, string>,

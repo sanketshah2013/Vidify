@@ -1,7 +1,9 @@
-import Router, { Request } from "express";
+import Router, { Request, Response } from "express";
 import Joi from "joi";
 import { GenreModel, MovieModel } from "../util/schemaModels.js";
 import { handleDBErrors } from "../util/initDataLoad.js";
+import authorize from "../middlewares/authorize.js";
+import admin from "../middlewares/admin.js";
 
 const router = Router();
 
@@ -16,7 +18,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req: Request<{}, any, Movie>, res) => {
+router.post("/", authorize, async (req: Request<{}, any, Movie>, res) => {
   const { error } = validateMovie(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -48,43 +50,51 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req: Request<{ id: string }, any, Movie>, res) => {
-  // Validate the input
-  const { error } = validateMovie(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+router.put(
+  "/:id",
+  authorize,
+  async (req: Request<{ id: string }, any, Movie>, res) => {
+    // Validate the input
+    const { error } = validateMovie(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
 
-  // Lookup and update the movie
-  try {
-    const { title, genreId, numberInStock, dailyRentalRate } = req.body;
-    const genre = await GenreModel.findById(genreId).select("_id name");
-    if (!genre) return res.status(404).send("Genre for given ID not found!");
+    // Lookup and update the movie
+    try {
+      const { title, genreId, numberInStock, dailyRentalRate } = req.body;
+      const genre = await GenreModel.findById(genreId).select("_id name");
+      if (!genre) return res.status(404).send("Genre for given ID not found!");
 
-    const movie = await MovieModel.findByIdAndUpdate(
-      req.params.id,
-      { title, genre, numberInStock, dailyRentalRate },
-      { returnDocument: "after", runValidators: true },
-    );
-    if (!movie) return res.status(404).send("Movie for given ID not found!");
+      const movie = await MovieModel.findByIdAndUpdate(
+        req.params.id,
+        { title, genre, numberInStock, dailyRentalRate },
+        { returnDocument: "after", runValidators: true },
+      );
+      if (!movie) return res.status(404).send("Movie for given ID not found!");
 
-    res.send(movie);
-  } catch (err) {
-    handleDBErrors(res, err);
-  }
-});
+      res.send(movie);
+    } catch (err) {
+      handleDBErrors(res, err);
+    }
+  },
+);
 
-router.delete("/:id", async (req, res) => {
-  // Lookup and remove the movie
-  try {
-    const movie = await MovieModel.findByIdAndDelete(req.params.id, {
-      returnDocument: "after",
-    });
-    if (!movie) return res.status(404).send("Movie for given ID not found!");
+router.delete(
+  "/:id",
+  [authorize, admin],
+  async (req: Request, res: Response) => {
+    // Lookup and remove the movie
+    try {
+      const movie = await MovieModel.findByIdAndDelete(req.params.id, {
+        returnDocument: "after",
+      });
+      if (!movie) return res.status(404).send("Movie for given ID not found!");
 
-    res.send(movie);
-  } catch (err) {
-    handleDBErrors(res, err);
-  }
-});
+      res.send(movie);
+    } catch (err) {
+      handleDBErrors(res, err);
+    }
+  },
+);
 
 const validateMovie = (movieObj: Movie): Joi.ValidationResult => {
   const schema = Joi.object({
