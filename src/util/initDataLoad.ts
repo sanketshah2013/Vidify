@@ -1,25 +1,23 @@
-import { Response } from "express";
+import { Document } from "mongoose";
 import { customerNames, genreNames, movies } from "./constants.js";
 import { CustomerModel, GenreModel, MovieModel } from "./schemaModels.js";
-import { Document } from "mongoose";
+import logger from "../startup/logger.js";
 
 const getAllGenres = async (): Promise<
   Document<any, any, Genre>[] | undefined
 > => {
   try {
     const genres = (await GenreModel.find()) as Document<any, any, Genre>[];
-    console.log("Existing Genres in DB:", genres.length);
+    logger.info("Existing Genres in DB:", genres.length);
     return genres;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
   }
 };
 
-const createGenres = async (force: boolean) => {
-  if (!force) {
-    const genreCount = await getAllGenres();
-    if (genreCount?.length) return;
-  }
+const createGenres = async () => {
+  const genreCount = await getAllGenres();
+  if (genreCount?.length) return;
 
   const genreData: Genre[] = genreNames.map((name) => ({
     name,
@@ -29,26 +27,24 @@ const createGenres = async (force: boolean) => {
 
   GenreModel.insertMany(genreData)
     .then((resp) =>
-      console.log("Initial Genre Data load Success! Total Data:", resp.length),
+      logger.info("Initial Genre Data load Success! Total Data:", resp.length),
     )
-    .catch((err) => console.error(err));
+    .catch((err) => logger.error(err));
 };
 
 const getCustomerCount = async (): Promise<number | undefined> => {
   try {
     const count = await CustomerModel.estimatedDocumentCount();
-    console.log("Existing Customers in DB:", count);
+    logger.info("Existing Customers in DB:", count);
     return count;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
   }
 };
 
-const createCustomers = async (force: boolean) => {
-  if (!force) {
-    const customerCount = await getCustomerCount();
-    if (customerCount) return;
-  }
+const createCustomers = async () => {
+  const customerCount = await getCustomerCount();
+  if (customerCount) return;
 
   const customerData: Customer[] = customerNames.map((name, index) => ({
     username: name.split(" ")[0] + "123",
@@ -59,29 +55,27 @@ const createCustomers = async (force: boolean) => {
 
   CustomerModel.insertMany(customerData)
     .then((resp) =>
-      console.log(
+      logger.info(
         "Initial Customer Data load Success! Total Data:",
         resp.length,
       ),
     )
-    .catch((err) => console.error(err));
+    .catch((err) => logger.error(err));
 };
 
 const getMovieCount = async (): Promise<number | undefined> => {
   try {
     const count = await MovieModel.estimatedDocumentCount();
-    console.log("Existing Movies in DB:", count);
+    logger.info("Existing Movies in DB:", count);
     return count;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
   }
 };
 
-const createMovies = async (force: boolean) => {
-  if (!force) {
-    const movieCount = await getMovieCount();
-    if (movieCount) return;
-  }
+const createMovies = async () => {
+  const movieCount = await getMovieCount();
+  if (movieCount) return;
 
   const genres = (await getAllGenres()) as any;
   const movieData: Movie[] = movies.map(({ title, genre }) => ({
@@ -95,18 +89,13 @@ const createMovies = async (force: boolean) => {
 
   MovieModel.insertMany(movieData)
     .then((resp) =>
-      console.log("Initial Movie Data load Success! Total Data:", resp.length),
+      logger.info("Initial Movie Data load Success! Total Data:", resp.length),
     )
-    .catch((err) => console.error(err));
+    .catch((err) => logger.error(err));
 };
 
-export const createInitialData = (force: boolean = false) => {
-  createGenres(force);
-  createCustomers(force);
-  createMovies(force);
-};
-
-export const handleDBErrors = (res: Response, err: unknown) => {
-  console.error("MongoDB Error:", err);
-  res.status(500).send(err);
+export const createInitialData = () => {
+  createGenres();
+  createCustomers();
+  createMovies();
 };

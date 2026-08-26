@@ -2,6 +2,7 @@ import config from "config";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { status } from "../util/constants.js";
+import logger from "../startup/logger.js";
 
 export default (req: Request, res: Response, next: NextFunction) => {
   const token = req.header("x-auth-token");
@@ -39,7 +40,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
     };
     next();
   } catch (err) {
-    console.log(err);
+    logger.error(err);
     if ((err as any).name === "TokenExpiredError")
       res
         .status(status.unauthorised)

@@ -136,8 +136,6 @@ export const RentalModel = mongoose.model(
       type: Date,
       validate: {
         validator: function (value: Date) {
-          console.log("value", value);
-          console.log("this.dateOut", this.dateOut);
           return value > this.dateOut;
         },
         message: () => "value cannot be less than 'dateOut' value",

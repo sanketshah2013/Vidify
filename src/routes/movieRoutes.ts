@@ -1,21 +1,16 @@
 import Router, { Request, Response } from "express";
 import Joi from "joi";
-import { GenreModel, MovieModel } from "../util/schemaModels.js";
-import { handleDBErrors } from "../util/initDataLoad.js";
-import authorize from "../middlewares/authorize.js";
 import admin from "../middlewares/admin.js";
+import authorize from "../middlewares/authorize.js";
+import { GenreModel, MovieModel } from "../util/schemaModels.js";
 
 const router = Router();
 
 router.get("/", async (req, res) => {
-  try {
-    const movies = await MovieModel.find()
-      .sort("title")
-      .select("title genre numberInStock dailyRentalRate");
-    res.send(movies);
-  } catch (err) {
-    handleDBErrors(res, err);
-  }
+  const movies = await MovieModel.find()
+    .sort("title")
+    .select("title genre numberInStock dailyRentalRate");
+  res.send(movies);
 });
 
 router.post("/", authorize, async (req: Request<{}, any, Movie>, res) => {
@@ -23,31 +18,23 @@ router.post("/", authorize, async (req: Request<{}, any, Movie>, res) => {
   if (error) return res.status(400).send(error.details[0].message);
 
   const { title, genreId, numberInStock, dailyRentalRate } = req.body;
-  try {
-    const genre = await GenreModel.findById(genreId).select("_id name");
-    if (!genre) return res.status(404).send("Genre for given ID not found!");
+  const genre = await GenreModel.findById(genreId).select("_id name");
+  if (!genre) return res.status(404).send("Genre for given ID not found!");
 
-    const newMovie = await new MovieModel({
-      title,
-      genre,
-      numberInStock,
-      dailyRentalRate,
-    }).save();
+  const newMovie = await new MovieModel({
+    title,
+    genre,
+    numberInStock,
+    dailyRentalRate,
+  }).save();
 
-    res.send(newMovie);
-  } catch (err) {
-    handleDBErrors(res, err);
-  }
+  res.send(newMovie);
 });
 
 router.get("/:id", async (req, res) => {
-  try {
-    const movie = await MovieModel.findById(req.params.id);
-    if (!movie) res.status(404).send("Movie for given ID not found!");
-    res.send(movie);
-  } catch (err) {
-    handleDBErrors(res, err);
-  }
+  const movie = await MovieModel.findById(req.params.id);
+  if (!movie) res.status(404).send("Movie for given ID not found!");
+  res.send(movie);
 });
 
 router.put(
@@ -59,22 +46,18 @@ router.put(
     if (error) return res.status(400).send(error.details[0].message);
 
     // Lookup and update the movie
-    try {
-      const { title, genreId, numberInStock, dailyRentalRate } = req.body;
-      const genre = await GenreModel.findById(genreId).select("_id name");
-      if (!genre) return res.status(404).send("Genre for given ID not found!");
+    const { title, genreId, numberInStock, dailyRentalRate } = req.body;
+    const genre = await GenreModel.findById(genreId).select("_id name");
+    if (!genre) return res.status(404).send("Genre for given ID not found!");
 
-      const movie = await MovieModel.findByIdAndUpdate(
-        req.params.id,
-        { title, genre, numberInStock, dailyRentalRate },
-        { returnDocument: "after", runValidators: true },
-      );
-      if (!movie) return res.status(404).send("Movie for given ID not found!");
+    const movie = await MovieModel.findByIdAndUpdate(
+      req.params.id,
+      { title, genre, numberInStock, dailyRentalRate },
+      { returnDocument: "after", runValidators: true },
+    );
+    if (!movie) return res.status(404).send("Movie for given ID not found!");
 
-      res.send(movie);
-    } catch (err) {
-      handleDBErrors(res, err);
-    }
+    res.send(movie);
   },
 );
 
@@ -83,16 +66,12 @@ router.delete(
   [authorize, admin],
   async (req: Request, res: Response) => {
     // Lookup and remove the movie
-    try {
-      const movie = await MovieModel.findByIdAndDelete(req.params.id, {
-        returnDocument: "after",
-      });
-      if (!movie) return res.status(404).send("Movie for given ID not found!");
+    const movie = await MovieModel.findByIdAndDelete(req.params.id, {
+      returnDocument: "after",
+    });
+    if (!movie) return res.status(404).send("Movie for given ID not found!");
 
-      res.send(movie);
-    } catch (err) {
-      handleDBErrors(res, err);
-    }
+    res.send(movie);
   },
 );
 

@@ -1,0 +1,90 @@
+2026-08-26T15:48:47.547Z [INFO]: Server is running on http://localhost:3000
+2026-08-26T15:48:47.611Z [INFO]: Connected to MongoDB...
+2026-08-26T15:48:47.627Z [INFO]: Existing Customers in DB:
+2026-08-26T15:48:47.628Z [INFO]: Existing Movies in DB:
+2026-08-26T15:48:47.638Z [INFO]: Existing Genres in DB:
+2026-08-26T15:48:58.876Z [INFO]: Server is running on http://localhost:3000
+2026-08-26T15:48:58.940Z [INFO]: Connected to MongoDB...
+2026-08-26T15:48:58.956Z [INFO]: Existing Customers in DB:
+2026-08-26T15:48:58.958Z [INFO]: Existing Movies in DB:
+2026-08-26T15:48:58.968Z [INFO]: Existing Genres in DB:
+2026-08-26T15:49:37.453Z [INFO]: Server is running on http://localhost:3000
+2026-08-26T15:49:37.533Z [INFO]: Connected to MongoDB...
+2026-08-26T15:49:37.555Z [INFO]: Existing Customers in DB:
+2026-08-26T15:49:37.558Z [INFO]: Existing Movies in DB:
+2026-08-26T15:49:37.571Z [INFO]: Existing Genres in DB:
+2026-08-26T16:11:37.688Z [INFO]: Server is running on http://localhost:3000
+2026-08-26T16:11:37.695Z [ERROR]: unhandledRejection: Promise rejected
+Error: Promise rejected
+    at <anonymous> (C:\Users\sanke\Documents\Sanket-PC\E-Drive\New-folder-Sanket\Workspace\Projects\Vidify\src\index.ts:19:26)
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:633:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+2026-08-26T16:12:49.255Z [INFO]: Server is running on http://localhost:3000
+2026-08-26T16:12:49.347Z [INFO]: Connected to MongoDB...
+2026-08-26T16:12:49.366Z [INFO]: Existing Customers in DB:
+2026-08-26T16:12:49.369Z [INFO]: Existing Movies in DB:
+2026-08-26T16:12:49.384Z [INFO]: Existing Genres in DB:
+2026-08-26T16:19:23.708Z [INFO]: Server is running on http://localhost:3000
+2026-08-26T16:19:23.850Z [INFO]: Connected to MongoDB...
+2026-08-26T16:19:23.868Z [INFO]: Existing Customers in DB:
+2026-08-26T16:19:23.870Z [INFO]: Existing Movies in DB:
+2026-08-26T16:19:23.881Z [INFO]: Existing Genres in DB:
+2026-08-26T16:20:40.434Z [INFO]: Server is running on http://localhost:3000
+2026-08-26T16:20:40.583Z [INFO]: Connected to MongoDB...
+2026-08-26T16:20:40.644Z [INFO]: Existing Customers in DB:
+2026-08-26T16:20:40.647Z [INFO]: Existing Movies in DB:
+2026-08-26T16:20:40.661Z [INFO]: Existing Genres in DB:
+2026-08-26T16:24:15.509Z [INFO]: Server is running on http://localhost:3000
+2026-08-26T16:24:25.519Z [ERROR]: undefined
+2026-08-26T16:24:25.583Z [ERROR]: undefined
+2026-08-26T16:24:25.584Z [ERROR]: undefined
+2026-08-26T16:24:25.592Z [ERROR]: undefined
+2026-08-26T16:24:31.775Z [INFO]: Server is running on http://localhost:3000
+2026-08-26T16:24:41.774Z [ERROR]: undefined
+2026-08-26T16:24:41.791Z [ERROR]: undefined
+2026-08-26T16:24:41.793Z [ERROR]: undefined
+2026-08-26T16:24:41.809Z [ERROR]: undefined
+2026-08-26T16:24:51.818Z [ERROR]: undefined
+2026-08-26T16:24:51.823Z [ERROR]: undefined
+2026-08-26T16:24:51.855Z [ERROR]: undefined
+2026-08-26T16:25:07.073Z [INFO]: Server is running on http://localhost:3000
+2026-08-26T16:25:07.163Z [INFO]: Connected to MongoDB...
+2026-08-26T16:25:07.181Z [INFO]: Existing Customers in DB:
+2026-08-26T16:25:07.187Z [INFO]: Existing Movies in DB:
+2026-08-26T16:25:07.199Z [INFO]: Existing Genres in DB:
+2026-08-26T16:26:52.869Z [INFO]: Server is running on http://localhost:3000
+2026-08-26T16:26:52.956Z [INFO]: Connected to MongoDB...
+2026-08-26T16:26:52.972Z [INFO]: Existing Customers in DB:
+2026-08-26T16:26:52.975Z [INFO]: Existing Movies in DB:
+2026-08-26T16:26:52.989Z [INFO]: Existing Genres in DB:
+2026-08-26T16:27:01.042Z [INFO]: Server is running on http://localhost:3000
+2026-08-26T16:27:01.191Z [INFO]: Connected to MongoDB...
+2026-08-26T16:27:01.232Z [INFO]: Existing Customers in DB:
+2026-08-26T16:27:01.234Z [INFO]: Existing Movies in DB:
+2026-08-26T16:27:01.247Z [INFO]: Existing Genres in DB:
+2026-08-26T16:29:38.386Z [INFO]: Server is running on http://localhost:3000
+2026-08-26T16:29:38.427Z [INFO]: Connected to MongoDB...
+2026-08-26T16:29:38.444Z [INFO]: Existing Customers in DB:
+2026-08-26T16:29:38.447Z [INFO]: Existing Movies in DB:
+2026-08-26T16:29:38.457Z [INFO]: Existing Genres in DB:
+2026-08-26T16:30:05.865Z [INFO]: Server is running on http://localhost:3000
+2026-08-26T16:30:05.949Z [INFO]: Connected to MongoDB...
+2026-08-26T16:30:05.967Z [INFO]: Existing Customers in DB:
+2026-08-26T16:30:05.969Z [INFO]: Existing Movies in DB:
+2026-08-26T16:30:05.984Z [INFO]: Existing Genres in DB:
+2026-08-26T16:31:14.130Z [INFO]: Server is running on http://localhost:3000
+2026-08-26T16:31:14.224Z [INFO]: Connected to MongoDB...
+2026-08-26T16:31:14.241Z [INFO]: Existing Customers in DB:
+2026-08-26T16:31:14.251Z [INFO]: Existing Genres in DB:
+2026-08-26T16:31:14.269Z [INFO]: Existing Movies in DB:
+2026-08-26T16:31:27.254Z [INFO]: Server is running on http://localhost:3000
+2026-08-26T16:31:27.323Z [INFO]: Connected to MongoDB...
+2026-08-26T16:31:27.340Z [INFO]: Existing Customers in DB:
+2026-08-26T16:31:27.343Z [INFO]: Existing Movies in DB:
+2026-08-26T16:31:27.357Z [INFO]: Existing Genres in DB:
+2026-08-26T16:31:40.781Z [INFO]: Server is running on http://localhost:3000
+2026-08-26T16:31:40.853Z [INFO]: Connected to MongoDB...
+2026-08-26T16:31:40.869Z [INFO]: Existing Customers in DB:
+2026-08-26T16:31:40.871Z [INFO]: Existing Movies in DB:
+2026-08-26T16:31:40.883Z [INFO]: Existing Genres in DB:
