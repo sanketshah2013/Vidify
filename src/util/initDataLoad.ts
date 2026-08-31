@@ -8,7 +8,7 @@ const getAllGenres = async (): Promise<
 > => {
   try {
     const genres = (await GenreModel.find()) as Document<any, any, Genre>[];
-    logger.info("Existing Genres in DB:", genres.length);
+    logger.info(`Existing Genres in DB: ${genres.length}`);
     return genres;
   } catch (error) {
     logger.error(error);
@@ -27,7 +27,9 @@ const createGenres = async () => {
 
   GenreModel.insertMany(genreData)
     .then((resp) =>
-      logger.info("Initial Genre Data load Success! Total Data:", resp.length),
+      logger.info(
+        `Initial Genre Data load Success! Total Data: ${resp.length}`,
+      ),
     )
     .catch((err) => logger.error(err));
 };
@@ -35,7 +37,7 @@ const createGenres = async () => {
 const getCustomerCount = async (): Promise<number | undefined> => {
   try {
     const count = await CustomerModel.estimatedDocumentCount();
-    logger.info("Existing Customers in DB:", count);
+    logger.info(`Existing Customers in DB: ${count}`);
     return count;
   } catch (error) {
     logger.error(error);
@@ -56,8 +58,7 @@ const createCustomers = async () => {
   CustomerModel.insertMany(customerData)
     .then((resp) =>
       logger.info(
-        "Initial Customer Data load Success! Total Data:",
-        resp.length,
+        `Initial Customer Data load Success! Total Data: ${resp.length}`,
       ),
     )
     .catch((err) => logger.error(err));
@@ -66,7 +67,7 @@ const createCustomers = async () => {
 const getMovieCount = async (): Promise<number | undefined> => {
   try {
     const count = await MovieModel.estimatedDocumentCount();
-    logger.info("Existing Movies in DB:", count);
+    logger.info(`Existing Movies in DB: ${count}`);
     return count;
   } catch (error) {
     logger.error(error);
@@ -89,7 +90,9 @@ const createMovies = async () => {
 
   MovieModel.insertMany(movieData)
     .then((resp) =>
-      logger.info("Initial Movie Data load Success! Total Data:", resp.length),
+      logger.info(
+        `Initial Movie Data load Success! Total Data: ${resp.length}`,
+      ),
     )
     .catch((err) => logger.error(err));
 };

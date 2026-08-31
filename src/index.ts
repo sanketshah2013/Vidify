@@ -4,6 +4,7 @@ import setupDB from "./startup/db.js";
 import logger from "./startup/logger.js";
 import setupRoutes from "./startup/routes.js";
 
+// setup config. Move this to individual file if more than 1
 if (!config.get("jwtPrivateKey")) {
   logger.error("FATAL ERROR: jwtPrivateKey is not defined!");
   process.exit(1);

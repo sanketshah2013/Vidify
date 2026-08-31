@@ -1,4 +1,5 @@
 export const status = {
+  ok: 200,
   badRequest: 400,
   unauthorised: 401,
   forbidden: 403,

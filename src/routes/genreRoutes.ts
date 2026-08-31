@@ -3,6 +3,7 @@ import Joi from "joi";
 import admin from "../middlewares/admin.js";
 import authorize from "../middlewares/authorize.js";
 import { GenreModel } from "../util/schemaModels.js";
+import validateObjectId from "../middlewares/validateObjectId.js";
 
 const router = Router();
 
@@ -22,7 +23,7 @@ router.post("/", authorize, async (req: Request<{}, any, Genre>, res) => {
   res.send(newGenre);
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", validateObjectId, async (req, res) => {
   const genre = await GenreModel.findById(req.params.id);
   if (!genre) res.status(404).send("Genre for given ID not found!");
   res.send(genre);
@@ -30,8 +31,8 @@ router.get("/:id", async (req, res) => {
 
 router.put(
   "/:id",
-  authorize,
-  async (req: Request<{ id: string }, any, Genre>, res) => {
+  [validateObjectId, authorize],
+  async (req: Request<{ id: string }, any, Genre>, res: Response) => {
     // Validate the input
     const { error } = validateGenre(req.body);
     if (error) return res.status(400).send(error.details[0].message);

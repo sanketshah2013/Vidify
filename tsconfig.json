@@ -13,13 +13,15 @@
     "strict": true, // Enable strong typing and fewer hidden bugs
     "noImplicitAny": true, // Error out on expressions inferred as 'any' type
     "strictNullChecks": true, // Guard against null/undefined pointer crashes
+    "lib": ["ES2022"], // Removes DOM (browser) types to keep it pure Node
 
     /* Interoperability & Optimization */
     "esModuleInterop": true, // Easily import CommonJS packages like Express
     "skipLibCheck": true, // Skip type-checking node_modules to speed up builds
     "forceConsistentCasingInFileNames": true, // Prevent cross-operating system import errors
     "resolveJsonModule": true, // Allow importing .json config files directly
-    "sourceMap": true // Produce debug files for easy line-matching errors
+    "sourceMap": true, // Produce debug files for easy line-matching errors
+    "types": ["node", "jest"]
   },
   "include": ["src/**/*"], // Tell TS to compile everything inside src/
   "exclude": ["node_modules", "dist"] // Tell TS to ignore these directories during compilation

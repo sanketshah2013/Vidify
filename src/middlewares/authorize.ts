@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { status } from "../util/constants.js";
 import logger from "../startup/logger.js";
 
-export default (req: Request, res: Response, next: NextFunction) => {
+const authorize = (req: Request, res: Response, next: NextFunction) => {
   const token = req.header("x-auth-token");
   if (!token)
     return res
@@ -32,12 +32,15 @@ export default (req: Request, res: Response, next: NextFunction) => {
           .status(status.unauthorised)
           .send("User not logged in or session expired!");
       }
+    } else {
+      return res.status(status.unauthorised).send("Invalid Token!");
     }
 
     (req as any).user = {
       _id: (decoded as jwt.JwtPayload)._id,
       isAdmin: (decoded as jwt.JwtPayload).isAdmin,
     };
+
     next();
   } catch (err) {
     logger.error(err);
@@ -48,3 +51,5 @@ export default (req: Request, res: Response, next: NextFunction) => {
     else res.status(status.unauthorised).send(err);
   }
 };
+
+export default authorize;

@@ -15,24 +15,29 @@
   "type": "module",
   "main": "index.ts",
   "scripts": {
-    "start": "set vidify_jwtPrivateKey=jwtPrivateKey && tsx watch src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "set vidify_jwtPrivateKey=jwtPrivateKey7890 && tsx watch src/index.ts",
+    "test": "set NODE_ENV=test&& set NODE_OPTIONS=--experimental-vm-modules&& jest --watchAll --verbose --coverage --runInBand"
   },
   "dependencies": {
     "@types/jsonwebtoken": "^9.0.10",
     "bcrypt": "^6.0.0",
-    "config": "^5.0.0",
+    "config": "^5.0.1",
     "express": "^5.2.1",
-    "joi": "^18.2.3",
+    "joi": "^18.2.5",
     "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.9.1",
+    "mongoose": "^9.9.4",
     "winston": "^3.19.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",
-    "@types/node": "^26.1.2",
-    "tsx": "^4.23.2",
-    "typescript": "^7.0.2"
+    "@types/jest": "^30.0.0",
+    "@types/node": "^26.4.0",
+    "@types/supertest": "^7.2.1",
+    "jest": "^30.5.0",
+    "supertest": "^7.2.2",
+    "ts-jest": "^29.4.12",
+    "tsx": "^4.23.12",
+    "typescript": "^6.0.3"
   }
 }
