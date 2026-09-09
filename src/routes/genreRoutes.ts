@@ -4,6 +4,19 @@ import admin from "../middlewares/admin.js";
 import authorize from "../middlewares/authorize.js";
 import { GenreModel } from "../util/schemaModels.js";
 import validateObjectId from "../middlewares/validateObjectId.js";
+import validateInput from "../middlewares/validateInput.js";
+
+const validateGenre = (genreObj: Genre): Joi.ValidationResult => {
+  const schema = Joi.object({
+    name: Joi.string().trim().min(2).max(15).required(),
+    description: Joi.string()
+      .trim()
+      .pattern(/^[a-zA-Z0-9 ]+$/) // Allows alphanumeric and spaces only
+      .max(20),
+    slug: Joi.string().trim().uri(),
+  });
+  return schema.validate(genreObj);
+};
 
 const router = Router();
 
@@ -14,14 +27,15 @@ router.get("/", async (req, res) => {
   res.send(genres);
 });
 
-router.post("/", authorize, async (req: Request<{}, any, Genre>, res) => {
-  const { error } = validateGenre(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
-
-  const { name, description, slug } = req.body;
-  const newGenre = await new GenreModel({ name, description, slug }).save();
-  res.send(newGenre);
-});
+router.post(
+  "/",
+  [authorize, validateInput(validateGenre)],
+  async (req: Request<{}, any, Genre>, res: Response) => {
+    const { name, description, slug } = req.body;
+    const newGenre = await new GenreModel({ name, description, slug }).save();
+    res.send(newGenre);
+  },
+);
 
 router.get("/:id", validateObjectId, async (req, res) => {
   const genre = await GenreModel.findById(req.params.id);
@@ -31,12 +45,8 @@ router.get("/:id", validateObjectId, async (req, res) => {
 
 router.put(
   "/:id",
-  [validateObjectId, authorize],
+  [validateObjectId, authorize, validateInput(validateGenre)],
   async (req: Request<{ id: string }, any, Genre>, res: Response) => {
-    // Validate the input
-    const { error } = validateGenre(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-
     // Lookup and update the genre
     const { name, description, slug } = req.body;
     const genre = await GenreModel.findByIdAndUpdate(
@@ -52,7 +62,7 @@ router.put(
 
 router.delete(
   "/:id",
-  [authorize, admin],
+  [validateObjectId, authorize, admin],
   async (req: Request, res: Response) => {
     // Lookup and remove the genre
     const genre = await GenreModel.findByIdAndDelete(req.params.id, {
@@ -63,17 +73,5 @@ router.delete(
     res.send(genre);
   },
 );
-
-const validateGenre = (genreObj: Genre): Joi.ValidationResult => {
-  const schema = Joi.object({
-    name: Joi.string().trim().min(2).max(15).required(),
-    description: Joi.string()
-      .trim()
-      .pattern(/^[a-zA-Z0-9 ]+$/) // Allows alphanumeric and spaces only
-      .max(20),
-    slug: Joi.string().trim().uri(),
-  });
-  return schema.validate(genreObj);
-};
 
 export default router;

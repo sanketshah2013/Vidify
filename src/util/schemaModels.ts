@@ -14,7 +14,7 @@ const GenreSchema = new mongoose.Schema({
   description: {
     type: String,
     trim: true, // Remove leading and trailing whitespaces automatically
-    maxLength: 20,
+    maxLength: 50,
     match: [/^[a-zA-Z0-9 ]+$/, "Only Alphanuerics and Spaces allowed"],
   },
   slug: { type: String, trim: true },
@@ -65,21 +65,22 @@ export const MovieModel = mongoose.model(
     title: {
       type: String,
       trim: true, // Remove leading and trailing whitespaces automatically
+      minLength: 1,
       maxLength: 50,
       match: [/^[a-zA-Z0-9 ]+$/, "Only Alphanuerics and Spaces allowed"],
       unique: true,
       required: true,
     },
-    genre: { type: GenreSchema, required: true },
+    genre: { type: mongoose.Types.ObjectId, required: true, ref: "genres" },
     numberInStock: {
       type: Number,
-      minLength: 0,
+      minLength: 1,
       maxLength: 10,
       required: true,
     },
     dailyRentalRate: {
       type: Number,
-      minLength: 0,
+      minLength: 1,
       maxLength: 10,
       required: true,
     },

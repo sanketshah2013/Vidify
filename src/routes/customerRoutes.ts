@@ -3,75 +3,8 @@ import Joi from "joi";
 import admin from "../middlewares/admin.js";
 import authorize from "../middlewares/authorize.js";
 import { CustomerModel } from "../util/schemaModels.js";
-
-const router = Router();
-
-router.get("/", async (req, res) => {
-  const customers = await CustomerModel.find()
-    .sort("name")
-    .select("username name isGold phone");
-  res.send(customers);
-});
-
-router.post("/", authorize, async (req: Request<{}, any, Customer>, res) => {
-  const { error } = validateCustomer(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
-
-  const { username, name, isGold, phone } = req.body;
-  const newCustomer = await new CustomerModel({
-    username,
-    name,
-    isGold,
-    phone,
-  }).save();
-  res.send(newCustomer);
-});
-
-router.get("/:username", async (req, res) => {
-  const customer = await CustomerModel.findOne({
-    username: req.params.username,
-  });
-  if (!customer) res.status(404).send("Customer for given username not found!");
-  res.send(customer);
-});
-
-router.put(
-  "/:id",
-  authorize,
-  async (req: Request<{ id: string }, any, Customer>, res) => {
-    // Validate the input
-    const { error } = validateCustomer(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-
-    // Lookup and update the customer
-    const { username, name, isGold, phone } = req.body;
-    const customer = await CustomerModel.findOneAndUpdate(
-      { username: req.params.id },
-      { username, name, isGold, phone },
-      { returnDocument: "after" },
-    );
-    if (!customer)
-      return res.status(404).send("Customer for given username not found!");
-
-    res.send(customer);
-  },
-);
-
-router.delete(
-  "/:id",
-  [authorize, admin],
-  async (req: Request, res: Response) => {
-    // Lookup and remove the customer
-    const customer = await CustomerModel.findOneAndDelete(
-      { username: req.params.id },
-      { returnDocument: "after" },
-    );
-    if (!customer)
-      return res.status(404).send("Customer for given username not found!");
-
-    res.send(customer);
-  },
-);
+import validateObjectId from "../middlewares/validateObjectId.js";
+import validateInput from "../middlewares/validateInput.js";
 
 const validateCustomer = (customerObj: Customer): Joi.ValidationResult => {
   const schema = Joi.object({
@@ -101,5 +34,70 @@ const validateCustomer = (customerObj: Customer): Joi.ValidationResult => {
   });
   return schema.validate(customerObj);
 };
+
+const router = Router();
+
+router.get("/", async (req, res) => {
+  const customers = await CustomerModel.find()
+    .sort("name")
+    .select("username name isGold phone");
+  res.send(customers);
+});
+
+router.post(
+  "/",
+  [authorize, validateInput(validateCustomer)],
+  async (req: Request<{}, any, Customer>, res: Response) => {
+    const { username, name, isGold, phone } = req.body;
+    const newCustomer = await new CustomerModel({
+      username,
+      name,
+      isGold,
+      phone,
+    }).save();
+    res.send(newCustomer);
+  },
+);
+
+router.get("/:username", async (req, res) => {
+  const customer = await CustomerModel.findOne({
+    username: req.params.username,
+  });
+  if (!customer) res.status(404).send("Customer for given username not found!");
+  res.send(customer);
+});
+
+router.put(
+  "/:id",
+  [validateObjectId, authorize, validateInput(validateCustomer)],
+  async (req: Request<{ id: string }, any, Customer>, res: Response) => {
+    // Lookup and update the customer
+    const { username, name, isGold, phone } = req.body;
+    const customer = await CustomerModel.findByIdAndUpdate(
+      req.params.id,
+      { username, name, isGold, phone },
+      { returnDocument: "after" },
+    );
+    if (!customer)
+      return res.status(404).send("Customer for given username not found!");
+
+    res.send(customer);
+  },
+);
+
+router.delete(
+  "/:id",
+  [validateObjectId, authorize, admin],
+  async (req: Request, res: Response) => {
+    // Lookup and remove the customer
+    const customer = await CustomerModel.findByIdAndDelete(req.params.id, {
+      returnDocument: "after",
+    });
+    if (!customer)
+      return res.status(404).send("Customer for given username not found!");
+
+    res.send(customer);
+  },
+);
 
 export default router;

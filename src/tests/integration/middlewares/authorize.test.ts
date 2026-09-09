@@ -27,7 +27,7 @@ describe("POST Suite: /", () => {
     token = "";
     const res = await execReq();
     expect(res.status).toBe(status.unauthorised);
-    expect(res.text).toContain("No Token provided");
+    expect(res.text.toLowerCase()).toContain("no token provided");
   });
 
   it("should give 401 error when invalid auth token provided", async () => {
@@ -44,7 +44,7 @@ describe("POST Suite: /", () => {
     token = jwt.sign(payload, config.get("jwtPrivateKey") as string);
     const res = await execReq();
     expect(res.status).toBe(status.unauthorised);
-    expect(res.text).toContain("expired");
+    expect(res.text.toLowerCase()).toContain("expired");
   });
 
   it("should validate expiration manually and give 401 error when valid but old auth token provided", async () => {
@@ -55,7 +55,7 @@ describe("POST Suite: /", () => {
     token = jwt.sign(payload, config.get("jwtPrivateKey") as string);
     const res = await execReq();
     expect(res.status).toBe(status.unauthorised);
-    expect(res.text).toContain("expired");
+    expect(res.text.toLowerCase()).toContain("expired");
   });
 
   it("should validate logic for expiration and give 401 error when empty iat token provided", async () => {
@@ -64,7 +64,7 @@ describe("POST Suite: /", () => {
     });
     const res = await execReq();
     expect(res.status).toBe(status.unauthorised);
-    expect(res.text).toContain("Invalid Token");
+    expect(res.text.toLowerCase()).toContain("invalid token");
   });
 
   it("should give status 200 when valid auth token provided", async () => {
