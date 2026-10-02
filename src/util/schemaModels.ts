@@ -1,5 +1,6 @@
 import config from "config";
 import jwt from "jsonwebtoken";
+import moment from "moment";
 import mongoose from "mongoose";
 
 const GenreSchema = new mongoose.Schema({
@@ -87,64 +88,73 @@ export const MovieModel = mongoose.model(
   }),
 );
 
-export const RentalModel = mongoose.model(
-  "rentals",
-  new mongoose.Schema({
-    customer: {
-      type: new mongoose.Schema({
-        name: {
-          type: String,
-          trim: true, // Remove leading and trailing whitespaces automatically
-          minLength: 3,
-          maxLength: 20,
-          match: [
-            /^[a-zA-Z]+(?:\s+[a-zA-Z]+)+$/,
-            "Require both first and last name (letters only).",
-          ],
-          required: true,
-        },
-        isGold: { type: Boolean, default: false },
-        phone: {
-          type: Number,
-          required: true,
-          minLength: 7,
-          maxLength: 15,
-        },
-      }),
-      required: true,
-    },
-    movie: {
-      type: new mongoose.Schema({
-        title: {
-          type: String,
-          trim: true, // Remove leading and trailing whitespaces automatically
-          maxLength: 50,
-          match: [/^[a-zA-Z0-9 ]+$/, "Only Alphanuerics and Spaces allowed"],
-          unique: true,
-          required: true,
-        },
-        dailyRentalRate: {
-          type: Number,
-          minLength: 0,
-          maxLength: 10,
-          required: true,
-        },
-      }),
-      required: true,
-    },
-    dateOut: { type: Date, required: true, default: Date.now },
-    dateReturned: {
-      type: Date,
-      validate: {
-        validator: function (value: Date) {
-          return value > this.dateOut;
-        },
-        message: () => "value cannot be less than 'dateOut' value",
+const rentalSchema = new mongoose.Schema({
+  customer: {
+    type: new mongoose.Schema({
+      name: {
+        type: String,
+        trim: true, // Remove leading and trailing whitespaces automatically
+        minLength: 3,
+        maxLength: 20,
+        match: [
+          /^[a-zA-Z]+(?:\s+[a-zA-Z]+)+$/,
+          "Require both first and last name (letters only).",
+        ],
+        required: true,
       },
+      isGold: { type: Boolean, default: false },
+      phone: {
+        type: Number,
+        required: true,
+        minLength: 7,
+        maxLength: 15,
+      },
+    }),
+    required: true,
+  },
+  movie: {
+    type: new mongoose.Schema({
+      title: {
+        type: String,
+        trim: true, // Remove leading and trailing whitespaces automatically
+        maxLength: 50,
+        match: [/^[a-zA-Z0-9 ]+$/, "Only Alphanuerics and Spaces allowed"],
+        unique: true,
+        required: true,
+      },
+      dailyRentalRate: {
+        type: Number,
+        minLength: 0,
+        maxLength: 10,
+        required: true,
+      },
+    }),
+    required: true,
+  },
+  dateOut: { type: Date, required: true, default: Date.now },
+  dateReturned: {
+    type: Date,
+    validate: {
+      validator: function (value: Date) {
+        return value > this.dateOut;
+      },
+      message: () => "value cannot be less than 'dateOut' value",
     },
-    rentalFee: { type: Number, min: 0 },
-  }),
-);
+  },
+  rentalFee: { type: Number, min: 0 },
+});
+
+rentalSchema.statics.lookUp = function (customerId, movieId) {
+  return this.findOne({ "customer._id": customerId, "movie._id": movieId });
+};
+
+rentalSchema.methods.processReturn = function () {
+  this.dateReturned = new Date();
+  const rentalDays = moment().diff(this.dateOut, "days");
+  this.rentalFee = rentalDays * this.movie.dailyRentalRate;
+};
+
+export const RentalModel = mongoose.model("rentals", rentalSchema);
 
 const userSchema = new mongoose.Schema({
   name: {

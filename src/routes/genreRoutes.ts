@@ -5,6 +5,7 @@ import authorize from "../middlewares/authorize.js";
 import { GenreModel } from "../util/schemaModels.js";
 import validateObjectId from "../middlewares/validateObjectId.js";
 import validateInput from "../middlewares/validateInput.js";
+import { status } from "../util/constants.js";
 
 const validateGenre = (genreObj: Genre): Joi.ValidationResult => {
   const schema = Joi.object({
@@ -39,7 +40,8 @@ router.post(
 
 router.get("/:id", validateObjectId, async (req, res) => {
   const genre = await GenreModel.findById(req.params.id);
-  if (!genre) res.status(404).send("Genre for given ID not found!");
+  if (!genre)
+    return res.status(status.notFound).send("Genre for given ID not found!");
   res.send(genre);
 });
 
@@ -54,7 +56,8 @@ router.put(
       { name, description, slug },
       { returnDocument: "after", runValidators: true },
     );
-    if (!genre) return res.status(404).send("Genre for given ID not found!");
+    if (!genre)
+      return res.status(status.notFound).send("Genre for given ID not found!");
 
     res.send(genre);
   },
@@ -68,7 +71,8 @@ router.delete(
     const genre = await GenreModel.findByIdAndDelete(req.params.id, {
       returnDocument: "after",
     });
-    if (!genre) return res.status(404).send("Genre for given ID not found!");
+    if (!genre)
+      return res.status(status.notFound).send("Genre for given ID not found!");
 
     res.send(genre);
   },

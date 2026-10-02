@@ -37,7 +37,8 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", validateObjectId, async (req, res) => {
   const rental = await RentalModel.findById(req.params.id);
-  if (!rental) res.status(404).send("rental for given ID not found!");
+  if (!rental)
+    return res.status(status.notFound).send("rental for given ID not found!");
   res.send(rental);
 });
 

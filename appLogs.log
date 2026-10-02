@@ -303,3 +303,23 @@
 2026-09-05T08:03:30.124Z [INFO]: Existing Customers in DB: 25
 2026-09-05T08:03:30.127Z [INFO]: Existing Movies in DB: 28
 2026-09-05T08:03:30.138Z [INFO]: Existing Genres in DB: 25
+2026-10-02T12:31:26.098Z [INFO]: Server is running on http://localhost:3000
+2026-10-02T12:31:26.128Z [INFO]: Connected to mongodb://localhost:27017/vidify
+2026-10-02T12:31:26.145Z [INFO]: Existing Customers in DB: 25
+2026-10-02T12:31:26.150Z [INFO]: Existing Movies in DB: 28
+2026-10-02T12:31:26.164Z [INFO]: Existing Genres in DB: 25
+2026-10-02T14:45:37.817Z [INFO]: Server is running on http://localhost:3000
+2026-10-02T14:45:38.010Z [INFO]: Connected to mongodb://localhost:27017/vidify
+2026-10-02T14:45:38.167Z [INFO]: Existing Customers in DB: 25
+2026-10-02T14:45:38.174Z [INFO]: Existing Movies in DB: 28
+2026-10-02T14:45:38.313Z [INFO]: Existing Genres in DB: 25
+2026-10-02T14:52:06.160Z [INFO]: Server is running on http://localhost:3000
+2026-10-02T14:52:06.250Z [INFO]: Connected to mongodb://localhost:27017/vidify
+2026-10-02T14:52:06.267Z [INFO]: Existing Customers in DB: 25
+2026-10-02T14:52:06.275Z [INFO]: Existing Movies in DB: 28
+2026-10-02T14:52:06.285Z [INFO]: Existing Genres in DB: 25
+2026-10-02T15:02:31.953Z [INFO]: Server is running on http://localhost:3000
+2026-10-02T15:02:32.037Z [INFO]: Connected to mongodb://localhost:27017/vidify
+2026-10-02T15:02:32.062Z [INFO]: Existing Customers in DB: 25
+2026-10-02T15:02:32.064Z [INFO]: Existing Movies in DB: 28
+2026-10-02T15:02:32.082Z [INFO]: Existing Genres in DB: 25

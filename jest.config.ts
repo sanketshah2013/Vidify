@@ -31,6 +31,7 @@ const jestConfig: JestConfigWithTsJest = {
 
   // Tell Jest to treat these extensions as ES Modules
   extensionsToTreatAsEsm: [".ts"],
+  coveragePathIgnorePatterns: ["./src/util/initDataLoad.ts"],
 };
 
 export default jestConfig;

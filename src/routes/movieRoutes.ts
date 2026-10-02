@@ -5,6 +5,7 @@ import authorize from "../middlewares/authorize.js";
 import { GenreModel, MovieModel } from "../util/schemaModels.js";
 import validateObjectId from "../middlewares/validateObjectId.js";
 import validateInput from "../middlewares/validateInput.js";
+import { status } from "../util/constants.js";
 
 const validateMovie = (movieObj: Movie): Joi.ValidationResult => {
   const schema = Joi.object({
@@ -53,7 +54,8 @@ router.post(
   async (req: Request<{}, any, Movie>, res: Response) => {
     const { title, genreId, numberInStock, dailyRentalRate } = req.body;
     const genre = await GenreModel.findById(genreId).select("_id name");
-    if (!genre) return res.status(404).send("Genre for given ID not found!");
+    if (!genre)
+      return res.status(status.notFound).send("Genre for given ID not found!");
 
     const newMovie = await new MovieModel({
       title,
@@ -69,7 +71,8 @@ router.post(
 
 router.get("/:id", validateObjectId, async (req, res) => {
   const movie = await MovieModel.findById(req.params.id).populate("genre");
-  if (!movie) res.status(404).send("Movie for given ID not found!");
+  if (!movie)
+    return res.status(status.notFound).send("Movie for given ID not found!");
   res.send(movie);
 });
 
@@ -81,7 +84,8 @@ router.put(
     const { title, genreId, numberInStock, dailyRentalRate } = req.body;
 
     const genre = await GenreModel.findById(genreId).select("_id name");
-    if (!genre) return res.status(404).send("Genre for given ID not found!");
+    if (!genre)
+      return res.status(status.notFound).send("Genre for given ID not found!");
 
     const movie = await MovieModel.findByIdAndUpdate(
       req.params.id,
@@ -89,7 +93,8 @@ router.put(
       { returnDocument: "after", runValidators: true },
     ).populate("genre");
 
-    if (!movie) return res.status(404).send("Movie for given ID not found!");
+    if (!movie)
+      return res.status(status.notFound).send("Movie for given ID not found!");
 
     res.send(movie);
   },
@@ -103,7 +108,8 @@ router.delete(
     const movie = await MovieModel.findByIdAndDelete(req.params.id, {
       returnDocument: "after",
     }).populate("genre");
-    if (!movie) return res.status(404).send("Movie for given ID not found!");
+    if (!movie)
+      return res.status(status.notFound).send("Movie for given ID not found!");
 
     res.send(movie);
   },

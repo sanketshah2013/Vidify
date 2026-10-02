@@ -5,6 +5,7 @@ import authorize from "../middlewares/authorize.js";
 import { CustomerModel } from "../util/schemaModels.js";
 import validateObjectId from "../middlewares/validateObjectId.js";
 import validateInput from "../middlewares/validateInput.js";
+import { status } from "../util/constants.js";
 
 const validateCustomer = (customerObj: Customer): Joi.ValidationResult => {
   const schema = Joi.object({
@@ -63,7 +64,10 @@ router.get("/:username", async (req, res) => {
   const customer = await CustomerModel.findOne({
     username: req.params.username,
   });
-  if (!customer) res.status(404).send("Customer for given username not found!");
+  if (!customer)
+    return res
+      .status(status.notFound)
+      .send("Customer for given username not found!");
   res.send(customer);
 });
 
@@ -79,7 +83,9 @@ router.put(
       { returnDocument: "after" },
     );
     if (!customer)
-      return res.status(404).send("Customer for given username not found!");
+      return res
+        .status(status.notFound)
+        .send("Customer for given username not found!");
 
     res.send(customer);
   },
@@ -94,7 +100,9 @@ router.delete(
       returnDocument: "after",
     });
     if (!customer)
-      return res.status(404).send("Customer for given username not found!");
+      return res
+        .status(status.notFound)
+        .send("Customer for given username not found!");
 
     res.send(customer);
   },
